@@ -1,0 +1,40 @@
+#ifndef __app_h__
+#define __app_h__
+
+#include "mlgm_types.h"
+
+#include "module_ble_comm.h"
+#include "module_sd_card.h"
+#include "module_usb_hid.h"
+#include "module_wifi_comm.h"
+#include "module_udp_debug.h"
+
+typedef struct t_mlgm_app_modules
+{
+
+    mlgm_module_manager manager;
+
+    sd_card_module *sd;
+    usb_hid_module *usb;
+    ble_comm_module *ble;
+    wifi_comm_module *wifi;
+    udp_debug_module *udp;
+
+} mlgm_app_modules;
+
+typedef struct t_mlgm_app
+{
+
+    mlgm_app_modules modules;
+
+    ble_comm_module ble;
+    usb_hid_module usb;
+    sd_card_module sd;
+    wifi_comm_module wifi;
+    udp_debug_module udp;
+
+} mlgm_app;
+
+mlgm_error mlgm_app_run(mlgm_app *app);
+
+#endif // __app_h__
