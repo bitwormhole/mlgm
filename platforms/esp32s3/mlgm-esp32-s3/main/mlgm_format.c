@@ -3,9 +3,8 @@
 #include "mlgm_errors.h"
 
 #include <stdlib.h>
-#include "esp_log.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+#include <stdarg.h>
+#include <stdio.h>
 
 #define MLGM_LOGGER_BUFFER_SIZE 256
 #define MLGM_ERROR_MSG_BUFFER_SIZE 256

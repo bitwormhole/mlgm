@@ -1,11 +1,13 @@
 #include "mlgm_errors.h"
 
+ #include <memory.h>
+
 // #include <stdlib.h>
 
-#include <stdlib.h>
-#include "esp_log.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+// #include <stdlib.h>
+// #include "esp_log.h"
+// #include "freertos/FreeRTOS.h"
+// #include "freertos/task.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 

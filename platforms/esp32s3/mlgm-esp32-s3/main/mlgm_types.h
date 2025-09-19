@@ -14,6 +14,7 @@ typedef unsigned long mlgm_uint32;
 typedef unsigned long long mlgm_uint64;
 
 typedef char mlgm_bool;
+typedef char mlgm_char;
 typedef mlgm_uint8 mlgm_byte;
 typedef mlgm_int mlgm_size;
 
