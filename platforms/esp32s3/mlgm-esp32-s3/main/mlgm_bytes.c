@@ -163,6 +163,31 @@ mlgm_bytes_buffer *mlgm_bytes_buffer_write_string(mlgm_bytes_buffer *self, mlgm_
     return NIL;
 }
 
+void mlgm_bytes_buffer_release(mlgm_bytes_buffer *self)
+{
+    if (self)
+    {
+        mlgm_bytes_buffer_entity *entity = self->entity;
+        self->entity = NIL;
+        if (entity)
+        {
+            mlgm_bytes_buffer_entity_release(entity);
+        }
+    }
+}
+
+mlgm_error mlgm_bytes_buffer_error(mlgm_bytes_buffer *self)
+{
+    if (self)
+    {
+        if (self->overflow)
+        {
+            return mlgm_error_make(500, "mlgm_bytes_buffer: overflow");
+        }
+    }
+    return NIL;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // struct:mlgm_string_builder
 
@@ -214,7 +239,15 @@ mlgm_string_builder *mlgm_string_builder_append_int(mlgm_string_builder *self, m
 
 mlgm_string_builder *mlgm_string_builder_append_bool(mlgm_string_builder *self, mlgm_bool b) {}
 
-mlgm_string_builder *mlgm_string_builder_append_char(mlgm_string_builder *self, mlgm_char n) {}
+mlgm_string_builder *mlgm_string_builder_append_char(mlgm_string_builder *self, mlgm_char n)
+{
+    if (self)
+    {
+        mlgm_bytes_buffer *pbuf = &self->buffer;
+        mlgm_bytes_buffer_write_byte(pbuf, n);
+    }
+    return self;
+}
 
 mlgm_string_builder *mlgm_string_builder_append_byte(mlgm_string_builder *self, mlgm_byte n) {}
 

@@ -1,5 +1,7 @@
 #include "mlgm_hex.h"
 
+#include "mlgm_bytes.h"
+
 #include <memory.h>
 
 mlgm_char hex_digit_encode(mlgm_byte num, mlgm_bool upper)
@@ -32,53 +34,78 @@ mlgm_byte hex_digit_decode(mlgm_char ch)
     return 0;
 }
 
-mlgm_error hex_string_decode(hex_string_codec *codec)
+mlgm_error hex_string_decoder_decode(hex_string_decoder *codec)
 {
+    int src_len = codec->string_length;
+    const char *const src_data = codec->string;
+    mlgm_uint hh, hl, b;
+    mlgm_bytes_buffer buffer;
 
-    // mlgm_uint value = 0;
-    // for (int i = 0; i < src_len; i++)
-    // {
+    if ((src_len < 1) && (src_data))
+    {
+        src_len = strlen(src_data);
+    }
 
-    //     mlgm_byte b = src_data[i];
-    //     mlgm_uint di = 0;
+    mlgm_bytes_buffer_init_with_buffer(&buffer, codec->binary, codec->binary_capacity);
 
-    //     mlgm_error err = hex_digit_decode(b, di);
-    //     if (err)
-    //     {
-    //         return err;
-    //     }
-    //     value = () | ();
-    // }
-    // return NIL;
+    for (int i = 0; i < src_len; i++)
+    {
+        char ch = src_data[i];
+        mlgm_uint hex = hex_digit_decode(ch);
+        if (i & 0x01)
+        {
+            hl = hex;
+            b = ((hh << 4) & 0xf0) | (hl & 0x0f);
+            mlgm_bytes_buffer_write_byte(&buffer, b);
+        }
+        else
+        {
+            hh = hex;
+        }
+    }
 
-    return mlgm_error_make(500, "todo: no impl");
+    mlgm_error err = mlgm_bytes_buffer_error(&buffer);
+    if (err)
+    {
+        return err;
+    }
+    codec->binary_length = buffer.length;
+    return NIL;
 }
 
-mlgm_error hex_string_encode(hex_string_codec *codec)
+mlgm_error hex_string_encoder_encode(hex_string_encoder *codec)
 {
-
     mlgm_size i;
+    mlgm_string_builder builder;
+
     mlgm_bool upper = codec->upper;
     mlgm_byte *src = codec->binary;
     mlgm_size src_len = codec->binary_length;
     mlgm_char *dst = codec->string;
     mlgm_size dst_cap = codec->string_capacity;
 
+    mlgm_string_builder_init_with_buffer(&builder, dst, dst_cap);
+
     for (i = 0; i < src_len; i++)
     {
         mlgm_byte b = src[i];
         mlgm_char ch0 = hex_digit_encode(0x0f & (b >> 4), upper);
         mlgm_char ch1 = hex_digit_encode(0x0f & b, upper);
+        mlgm_string_builder_append_char(&builder, ch0);
+        mlgm_string_builder_append_char(&builder, ch1);
     }
 
-    return mlgm_error_make(500, "todo: no impl");
+    mlgm_string str = mlgm_string_builder_string(&builder);
+    codec->string_length = strlen(str);
+
+    return mlgm_string_builder_error(&builder);
 }
 
-mlgm_error hex_string_prepare_encode(hex_string_codec *codec, mlgm_byte *src, mlgm_size src_len, mlgm_char *dst, mlgm_size dst_cap)
+mlgm_error hex_string_encoder_prepare(hex_string_encoder *codec, mlgm_byte *src, mlgm_size src_len, mlgm_char *dst, mlgm_size dst_cap)
 {
     if (codec == NIL || src == NIL || dst == NIL)
     {
-        return mlgm_error_make(500, "hex_string_prepare_encode: param(s) is nil");
+        return mlgm_error_make(500, "hex_string_encoder_prepare: param(s) is nil");
     }
     memset(codec, 0, sizeof(codec[0]));
 
@@ -91,11 +118,11 @@ mlgm_error hex_string_prepare_encode(hex_string_codec *codec, mlgm_byte *src, ml
     return NIL;
 }
 
-mlgm_error hex_string_prepare_decode(hex_string_codec *codec, mlgm_string src, mlgm_size src_len, mlgm_byte *dst, mlgm_size dst_cap)
+mlgm_error hex_string_decoder_prepare(hex_string_decoder *codec, mlgm_string src, mlgm_size src_len, mlgm_byte *dst, mlgm_size dst_cap)
 {
     if (codec == NIL || src == NIL || dst == NIL)
     {
-        return mlgm_error_make(500, "hex_string_prepare_decode: param(s) is nil");
+        return mlgm_error_make(500, "hex_string_decoder_prepare: param(s) is nil");
     }
     memset(codec, 0, sizeof(codec[0]));
 

@@ -140,6 +140,8 @@ mlgm_error mlgm_unit_list_run_all(mlgm_unit_list *self)
         mlgm_error err = mlgm_unit_run(u);
         if (err)
         {
+            mlgm_string msg = mlgm_error_get_message(err);
+            mlgm_logger_error(NIL, "mlgm_unit_list_run_all:unit_error:%s", msg);
             count_err++;
         }
         else
@@ -151,10 +153,10 @@ mlgm_error mlgm_unit_list_run_all(mlgm_unit_list *self)
     }
 
     int count_skip = (count_total - count_done);
-    mlgm_logger_info(NIL, "count.done  = %d", count_done);
-    mlgm_logger_info(NIL, "count.skip  = %d", count_skip);
-    mlgm_logger_info(NIL, "count.ok    = %d", count_ok);
     mlgm_logger_info(NIL, "count.error = %d", count_err);
+    mlgm_logger_info(NIL, "count.skip  = %d", count_skip);
+    mlgm_logger_info(NIL, "count.done  = %d", count_done);
+    mlgm_logger_info(NIL, "count.ok    = %d", count_ok);
     mlgm_logger_info(NIL, "count.total = %d", count_done);
 
     if (count_err > 0)

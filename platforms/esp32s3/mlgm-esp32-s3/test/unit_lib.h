@@ -6,6 +6,7 @@
 // case
 
 #include "cases/test_hex_codec.c"
+#include "cases/test_pktline_codec.c"
 
 ////////////////////////////////////////////////////////////////////////////////
 // mock
@@ -17,6 +18,7 @@
 
 #include "./../main/mlgm_unit.c"
 #include "./../main/mlgm_hex.c"
+#include "./../main/mlgm_bytes.c"
 #include "./../main/mlgm_format.c"
 #include "./../main/mlgm_errors.c"
 
