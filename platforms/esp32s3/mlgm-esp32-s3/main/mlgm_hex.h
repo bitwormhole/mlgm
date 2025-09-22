@@ -62,6 +62,10 @@ mlgm_error hex_string_encoder_prepare(hex_string_encoder *codec, mlgm_byte *src,
 mlgm_error hex_string_decoder_decode(hex_string_decoder *codec);
 mlgm_error hex_string_decoder_prepare(hex_string_decoder *codec, mlgm_string src, mlgm_size src_len, mlgm_byte *dst, mlgm_size dst_cap);
 
+// bin <==> str
+mlgm_error mlgm_hex_to_string(void *src, mlgm_size src_len, void *dst, mlgm_size dst_cap);
+mlgm_error mlgm_hex_parse_string(mlgm_string src, mlgm_size src_len, void *dst, mlgm_size dst_cap);
+
 ////////////////////////////////////////////////////////////////////////////////
 
 #endif // __mlgm_hex_h__

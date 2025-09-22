@@ -5,10 +5,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 mlgm_error sd_card_module_on_create(mlgm_module *m);
-
 mlgm_error sd_card_module_on_start(mlgm_module *m);
 mlgm_error sd_card_module_on_resume(mlgm_module *m);
+
 mlgm_error sd_card_module_on_run(mlgm_module *m);
+
+mlgm_error sd_card_module_on_stop(mlgm_module *m);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -22,6 +24,9 @@ mlgm_error sd_card_module_on_create(mlgm_module *m)
 
 mlgm_error sd_card_module_on_start(mlgm_module *m)
 {
+
+    // mount
+
     return NIL;
 }
 
@@ -32,6 +37,14 @@ mlgm_error sd_card_module_on_resume(mlgm_module *m)
 
 mlgm_error sd_card_module_on_run(mlgm_module *m)
 {
+    return NIL;
+}
+
+mlgm_error sd_card_module_on_stop(mlgm_module *m)
+{
+
+    // unmount
+
     return NIL;
 }
 

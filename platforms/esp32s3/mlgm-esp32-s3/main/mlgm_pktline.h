@@ -40,6 +40,7 @@ typedef struct t_mlgm_pktline_pack
 
 ////////////////////////////////////////////////////////////////////////////////
 
+// mlgm_pktline_buffer 是缓冲区的抽象接口
 typedef struct t_mlgm_pktline_buffer
 {
     mlgm_pktline_pack pack;
@@ -51,6 +52,7 @@ typedef struct t_mlgm_pktline_buffer
 
 // 以下是各种容量的缓冲区实体
 
+// mlgm_pktline_buffer_4k 是容量为 4k 的缓冲区实体
 typedef struct t_mlgm_pktline_buffer_4k
 {
     mlgm_pktline_buffer buffer;
@@ -58,6 +60,7 @@ typedef struct t_mlgm_pktline_buffer_4k
 
 } mlgm_pktline_buffer_4k;
 
+// mlgm_pktline_buffer_16k 是容量为 16k 的缓冲区实体
 typedef struct t_mlgm_pktline_buffer_16k
 {
     mlgm_pktline_buffer buffer;
@@ -65,6 +68,7 @@ typedef struct t_mlgm_pktline_buffer_16k
 
 } mlgm_pktline_buffer_16k;
 
+// mlgm_pktline_buffer_64k 是容量为 64k 的缓冲区实体
 typedef struct t_mlgm_pktline_buffer_64k
 {
     mlgm_pktline_buffer buffer;
@@ -73,11 +77,61 @@ typedef struct t_mlgm_pktline_buffer_64k
 } mlgm_pktline_buffer_64k;
 
 ////////////////////////////////////////////////////////////////////////////////
+// codec
+
+typedef struct t_mlgm_pktline_encoder
+{
+
+    // src
+
+    mlgm_pktline_pack *pack; // in
+
+    // dst
+
+    mlgm_byte *data;                // io
+    mlgm_size data_length;          // out
+    mlgm_size data_buffer_capacity; // in
+
+    // options
+
+    mlgm_pktline_buffer *buffer;
+
+} mlgm_pktline_encoder;
+
+typedef struct t_mlgm_pktline_decoder
+{
+
+    // src
+
+    mlgm_byte *data;       // in
+    mlgm_size data_length; // in
+
+    // dst
+
+    mlgm_pktline_pack *pack; // out
+
+    // options
+
+    mlgm_pktline_buffer *buffer;
+
+} mlgm_pktline_decoder;
+
+////////////////////////////////////////////////////////////////////////////////
 
 // mlgm_pktline_size
 
 mlgm_size mlgm_pktline_size_get(mlgm_pktline_size *self);
 void mlgm_pktline_size_set(mlgm_pktline_size *self, mlgm_size size);
+
+// mlgm_pktline_encoder
+
+mlgm_error mlgm_pktline_encoder_init(mlgm_pktline_encoder *self, mlgm_pktline_buffer *buffer);
+mlgm_error mlgm_pktline_encoder_encode(mlgm_pktline_encoder *self);
+
+// mlgm_pktline_decoder
+
+mlgm_error mlgm_pktline_decoder_init(mlgm_pktline_decoder *self, mlgm_pktline_buffer *buffer);
+mlgm_error mlgm_pktline_decoder_decode(mlgm_pktline_decoder *self);
 
 // mlgm_pktline_buffer
 
@@ -87,11 +141,14 @@ mlgm_error mlgm_pktline_buffer_decode(mlgm_pktline_buffer *self);
 
 // buffer (4k)
 mlgm_pktline_buffer_4k *mlgm_pktline_buffer_4k_init(mlgm_pktline_buffer_4k *self);
+mlgm_pktline_buffer *mlgm_pktline_buffer_4k_to_buffer(mlgm_pktline_buffer_4k *self);
 
 // buffer (16k)
 mlgm_pktline_buffer_16k *mlgm_pktline_buffer_16k_init(mlgm_pktline_buffer_16k *self);
+mlgm_pktline_buffer *mlgm_pktline_buffer_16k_to_buffer(mlgm_pktline_buffer_16k *self);
 
 // buffer (64k)
 mlgm_pktline_buffer_64k *mlgm_pktline_buffer_64k_init(mlgm_pktline_buffer_64k *self);
+mlgm_pktline_buffer *mlgm_pktline_buffer_64k_to_buffer(mlgm_pktline_buffer_64k *self);
 
 #endif // __mlgm_pktline_h__

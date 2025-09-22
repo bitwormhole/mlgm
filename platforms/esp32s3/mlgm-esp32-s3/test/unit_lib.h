@@ -7,6 +7,7 @@
 
 #include "cases/test_hex_codec.c"
 #include "cases/test_pktline_codec.c"
+#include "cases/test_sha1_sum.c"
 
 ////////////////////////////////////////////////////////////////////////////////
 // mock
@@ -20,7 +21,9 @@
 #include "./../main/mlgm_hex.c"
 #include "./../main/mlgm_bytes.c"
 #include "./../main/mlgm_format.c"
-#include "./../main/mlgm_errors.c"
+#include "./../main/mlgm_errors.c" 
+
+#include "./../main/crypto/sum_fn.c"
 
 ////////////////////////////////////////////////////////////////////////////////
 

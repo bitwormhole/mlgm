@@ -100,7 +100,7 @@ mlgm_bool mlgm_bytes_buffer_has_space(mlgm_bytes_buffer *self, mlgm_size want_si
         mlgm_byte *data = self->data;
         if (data)
         {
-            if (len + want_size < cap)
+            if (len + want_size <= cap)
             {
                 return YES;
             }
@@ -231,13 +231,27 @@ mlgm_string_builder *mlgm_string_builder_reset(mlgm_string_builder *self)
     return self;
 }
 
-mlgm_string_builder *mlgm_string_builder_append_string(mlgm_string_builder *self, mlgm_string str) {}
+mlgm_string_builder *mlgm_string_builder_append_string(mlgm_string_builder *self, mlgm_string str)
+{
 
-mlgm_string_builder *mlgm_string_builder_append_uint(mlgm_string_builder *self, mlgm_uint n) {}
+    // todo ... append ...
+    return self;
+}
 
-mlgm_string_builder *mlgm_string_builder_append_int(mlgm_string_builder *self, mlgm_int n) {}
+mlgm_string_builder *mlgm_string_builder_append_uint(mlgm_string_builder *self, mlgm_uint n)
+{ // todo ... append ...
+    return self;
+}
 
-mlgm_string_builder *mlgm_string_builder_append_bool(mlgm_string_builder *self, mlgm_bool b) {}
+mlgm_string_builder *mlgm_string_builder_append_int(mlgm_string_builder *self, mlgm_int n)
+{ // todo ... append ...
+    return self;
+}
+
+mlgm_string_builder *mlgm_string_builder_append_bool(mlgm_string_builder *self, mlgm_bool b)
+{ // todo ... append ...
+    return self;
+}
 
 mlgm_string_builder *mlgm_string_builder_append_char(mlgm_string_builder *self, mlgm_char n)
 {
@@ -249,7 +263,10 @@ mlgm_string_builder *mlgm_string_builder_append_char(mlgm_string_builder *self, 
     return self;
 }
 
-mlgm_string_builder *mlgm_string_builder_append_byte(mlgm_string_builder *self, mlgm_byte n) {}
+mlgm_string_builder *mlgm_string_builder_append_byte(mlgm_string_builder *self, mlgm_byte n)
+{ // todo ... append ...
+    return self;
+}
 
 mlgm_string mlgm_string_builder_string(mlgm_string_builder *self)
 {
@@ -263,7 +280,7 @@ mlgm_string mlgm_string_builder_string(mlgm_string_builder *self)
         {
             data[len] = 0;
         }
-        return data;
+        return (mlgm_string)data;
     }
     return NIL;
 }

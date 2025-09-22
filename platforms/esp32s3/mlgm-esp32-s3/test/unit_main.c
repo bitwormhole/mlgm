@@ -21,6 +21,10 @@ void main(void)
     mlgm_unit_list_add_fn(plist, "run_case_hex_string_decode", run_case_hex_string_decode);
 
     mlgm_unit_list_add_fn(plist, "run_case_pktline_codec", run_case_pktline_codec);
+    mlgm_unit_list_add_fn(plist, "run_case_pktline_encode", run_case_pktline_encode);
+    mlgm_unit_list_add_fn(plist, "run_case_pktline_decode", run_case_pktline_decode);
+
+    mlgm_unit_list_add_fn(plist, "run_case_sha1_sum_from_hex_string", run_case_sha1_sum_from_hex_string);
 
     ////////////////////////////////////////////////////////////////////
 

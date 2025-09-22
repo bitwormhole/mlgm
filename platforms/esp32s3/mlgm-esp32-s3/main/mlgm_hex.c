@@ -47,6 +47,7 @@ mlgm_error hex_string_decoder_decode(hex_string_decoder *codec)
     }
 
     mlgm_bytes_buffer_init_with_buffer(&buffer, codec->binary, codec->binary_capacity);
+    hh = hl = 0;
 
     for (int i = 0; i < src_len; i++)
     {
@@ -126,6 +127,11 @@ mlgm_error hex_string_decoder_prepare(hex_string_decoder *codec, mlgm_string src
     }
     memset(codec, 0, sizeof(codec[0]));
 
+    if (src_len < 1)
+    {
+        src_len = strlen(src);
+    }
+
     codec->string = (void *)src;
     codec->string_length = src_len;
 
@@ -134,3 +140,22 @@ mlgm_error hex_string_decoder_prepare(hex_string_decoder *codec, mlgm_string src
 
     return NIL;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+mlgm_error mlgm_hex_to_string(void *src, mlgm_size src_len, void *dst, mlgm_size dst_cap)
+{
+    hex_string_encoder encoder;
+    hex_string_encoder_prepare(&encoder, src, src_len, dst, dst_cap);
+    return hex_string_encoder_encode(&encoder);
+}
+
+mlgm_error mlgm_hex_parse_string(mlgm_string src, mlgm_size src_len, void *dst, mlgm_size dst_cap)
+{
+    hex_string_decoder decoder;
+    hex_string_decoder_prepare(&decoder, src, src_len, dst, dst_cap);
+    return hex_string_decoder_decode(&decoder);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// EOF

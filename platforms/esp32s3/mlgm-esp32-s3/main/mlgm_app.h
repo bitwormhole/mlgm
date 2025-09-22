@@ -8,6 +8,7 @@
 #include "module_usb_hid.h"
 #include "module_wifi_comm.h"
 #include "module_udp_debug.h"
+#include "module_runtime_test.h"
 
 typedef struct t_mlgm_app_modules
 {
@@ -19,6 +20,7 @@ typedef struct t_mlgm_app_modules
     ble_comm_module *ble;
     wifi_comm_module *wifi;
     udp_debug_module *udp;
+    runtime_test_module *rttest;
 
 } mlgm_app_modules;
 
@@ -32,6 +34,7 @@ typedef struct t_mlgm_app
     sd_card_module sd;
     wifi_comm_module wifi;
     udp_debug_module udp;
+    runtime_test_module rttest;
 
 } mlgm_app;
 

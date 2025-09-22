@@ -7,9 +7,10 @@
 mlgm_error run_case_hex_codec(mlgm_unit *unit)
 {
     const int buffer_size = 256;
-    char buffer1[buffer_size + 2];       // bin
-    char buffer2[(buffer_size * 2) + 2]; // string
-    char buffer3[buffer_size + 2];       // bin
+
+    char buffer1[buffer_size];           // bin
+    char buffer2[(buffer_size * 2) + 5]; // string
+    char buffer3[buffer_size];           // bin
 
     for (int i = 0; i < buffer_size; ++i)
     {
@@ -36,8 +37,7 @@ mlgm_error run_case_hex_codec(mlgm_unit *unit)
         return err;
     }
 
-    int cmp13 = memcmp(buffer1, buffer3, buffer_size);
-    if (cmp13)
+    if (memcmp(buffer1, buffer3, buffer_size) != 0)
     {
         return mlgm_error_make(500, "run_case_hex_codec: data(buffer1) != data(buffer3)");
     }

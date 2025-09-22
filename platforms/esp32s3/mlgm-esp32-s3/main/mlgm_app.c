@@ -79,18 +79,21 @@ mlgm_error mlgm_app_on_init(mlgm_app *app)
     usb_hid_module *mod_usb_1 = &app->usb;
     wifi_comm_module *mod_wifi_1 = &app->wifi;
     udp_debug_module *mod_udp_1 = &app->udp;
+    runtime_test_module *mod_rttest_1 = &app->rttest;
 
     mlgm_module *mod_ble_2 = ble_comm_init(mod_ble_1);
     mlgm_module *mod_sd_2 = sd_card_init(mod_sd_1);
     mlgm_module *mod_usb_2 = usb_hid_init(mod_usb_1);
     mlgm_module *mod_wifi_2 = wifi_comm_init(mod_wifi_1);
     mlgm_module *mod_udp_2 = udp_debug_init(mod_udp_1);
+    mlgm_module *mod_rttest_2 = runtime_test_init(mod_rttest_1);
 
     mlgm_module_manager_add(mm, mod_ble_2);
     mlgm_module_manager_add(mm, mod_sd_2);
     mlgm_module_manager_add(mm, mod_usb_2);
     mlgm_module_manager_add(mm, mod_wifi_2);
     mlgm_module_manager_add(mm, mod_udp_2);
+    mlgm_module_manager_add(mm, mod_rttest_2);
 
     return mlgm_module_manager_error(mm);
 }

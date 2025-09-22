@@ -6,5 +6,6 @@
 #include "../main/mlgm_bytes.h"
 #include "../main/mlgm_unit.h"
 #include "../main/mlgm_hex.h"
+#include "../main/mlgm_pktline.h"
 
 #endif // __unit_include_h__
