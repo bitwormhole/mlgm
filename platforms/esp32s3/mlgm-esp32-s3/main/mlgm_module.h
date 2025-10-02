@@ -3,11 +3,30 @@
 
 #include "mlgm_types.h"
 #include "mlgm_errors.h"
+#include "mlgm_structures.h"
+
+////////////////////////////////////////////////////////////////////////////////
 
 #define MLGM_MODULE_MANAGER_CAPACITY 10
 
-struct t_mlgm_module;
-struct t_mlgm_app_modules;
+////////////////////////////////////////////////////////////////////////////////
+
+typedef enum t_mlgm_module_class
+{
+
+      MLGM_MODULE_CLASS_,
+
+      MLGM_MODULE_CLASS_SD_CARD,
+      MLGM_MODULE_CLASS_WIFI,
+      MLGM_MODULE_CLASS_BLE,
+      MLGM_MODULE_CLASS_USB_HID,
+      MLGM_MODULE_CLASS_LED,
+      MLGM_MODULE_CLASS_LCD,
+
+      MLGM_MODULE_CLASS_UDP_DEBUG,
+      MLGM_MODULE_CLASS_RUNTIME_TEST,
+
+} mlgm_module_class;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -35,13 +54,12 @@ typedef mlgm_error (*mlgm_module_lifecycle_func)(struct t_mlgm_module *module);
 typedef struct t_mlgm_module
 {
 
+      mlgm_app_context *context;
+      mlgm_module_class module_class;
       mlgm_string name;
-
       mlgm_bool enabled;
 
       void *instance; // the instance of module
-
-      struct t_mlgm_app_modules *modules;
 
       mlgm_module_lifecycle_func on_create;
       mlgm_module_lifecycle_func on_start;
@@ -55,7 +73,11 @@ typedef struct t_mlgm_module
 
 } mlgm_module;
 
+mlgm_module *mlgm_module_init(mlgm_module *m, mlgm_app_context *ctx, mlgm_module_class cls, mlgm_string name, void *inst);
+
 mlgm_string mlgm_module_get_name(mlgm_module *m);
+
+void *mlgm_module_get_instance(mlgm_module *m, mlgm_module_class want_class);
 
 ////////////////////////////////////////////////////////////////////////////////
 

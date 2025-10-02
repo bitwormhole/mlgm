@@ -33,6 +33,21 @@ mlgm_string mlgm_lifecycle_phase_stringify(mlgm_lifecycle_phase phase)
 
 ////////////////////////////////////////////////////////////////////////////////
 
+mlgm_module *mlgm_module_init(mlgm_module *m, mlgm_app_context *ctx, mlgm_module_class cls, mlgm_string name, void *inst)
+{
+    if (m)
+    {
+        memset(m, 0, sizeof(m[0]));
+
+        m->enabled = YES;
+        m->context = ctx;
+        m->name = name;
+        m->module_class = cls;
+        m->instance = inst;
+    }
+    return m;
+}
+
 mlgm_string mlgm_module_get_name(mlgm_module *m)
 {
     if (m == NIL)
@@ -45,6 +60,26 @@ mlgm_string mlgm_module_get_name(mlgm_module *m)
         name = "nil";
     }
     return name;
+}
+
+void *mlgm_module_get_instance(mlgm_module *m, mlgm_module_class want_class)
+{
+    if (m == NIL)
+    {
+        return NIL;
+    }
+
+    void *inst = m->instance;
+    mlgm_module_class cls = m->module_class;
+    mlgm_string name = m->name;
+    mlgm_app_context *ctx = m->context;
+
+    if ((inst == m) && (cls == want_class) && (name) && (ctx))
+    {
+        return inst;
+    }
+
+    return NIL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,7 @@
 #include "mlgm_unit.h"
 
 #include "mlgm_logger.h"
+#include "mlgm_app.h"
 
 #include <memory.h>
 #include <stdio.h>
@@ -109,7 +110,7 @@ void mlgm_unit_list_add(mlgm_unit_list *self, mlgm_unit *unit)
     }
 }
 
-mlgm_error mlgm_unit_list_run_all(mlgm_unit_list *self)
+mlgm_error mlgm_unit_list_run_all(mlgm_unit_list *self, mlgm_app_context *ac)
 {
     if (self == NIL)
     {
@@ -129,6 +130,7 @@ mlgm_error mlgm_unit_list_run_all(mlgm_unit_list *self)
     for (; p; p = p->next)
     {
         mlgm_unit *u = &p->unit;
+        u->context = ac;
         count_total++;
         if (!mlgm_unit_is_ready(u))
         {

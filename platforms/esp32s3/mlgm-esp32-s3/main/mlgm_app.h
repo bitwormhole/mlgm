@@ -2,6 +2,7 @@
 #define __app_h__
 
 #include "mlgm_types.h"
+#include "mlgm_structures.h"
 
 #include "module_ble_comm.h"
 #include "module_sd_card.h"
@@ -10,10 +11,13 @@
 #include "module_udp_debug.h"
 #include "module_runtime_test.h"
 
-typedef struct t_mlgm_app_modules
+typedef struct t_mlgm_app_context
 {
 
-    mlgm_module_manager manager;
+    // 这里面包含的都是引用
+
+    mlgm_app *app;
+    mlgm_module_manager *modules;
 
     sd_card_module *sd;
     usb_hid_module *usb;
@@ -22,12 +26,15 @@ typedef struct t_mlgm_app_modules
     udp_debug_module *udp;
     runtime_test_module *rttest;
 
-} mlgm_app_modules;
+} mlgm_app_context;
 
 typedef struct t_mlgm_app
 {
 
-    mlgm_app_modules modules;
+    // 这里面包含的都是实体
+
+    mlgm_app_context context;
+    mlgm_module_manager modules;
 
     ble_comm_module ble;
     usb_hid_module usb;

@@ -6,8 +6,8 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#define MLGM_LOGGER_BUFFER_SIZE 256
-#define MLGM_ERROR_MSG_BUFFER_SIZE 256
+#define MLGM_LOGGER_BUFFER_SIZE 512
+#define MLGM_ERROR_MSG_BUFFER_SIZE 512
 
 ////////////////////////////////////////////////////////////////////////////////
 

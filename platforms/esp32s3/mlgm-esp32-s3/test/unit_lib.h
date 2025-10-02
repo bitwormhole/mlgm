@@ -8,6 +8,8 @@
 #include "cases/test_hex_codec.c"
 #include "cases/test_pktline_codec.c"
 #include "cases/test_sha1_sum.c"
+#include "cases/test_strings.c"
+#include "cases/test_defer.c"
 
 ////////////////////////////////////////////////////////////////////////////////
 // mock
@@ -21,7 +23,9 @@
 #include "./../main/mlgm_hex.c"
 #include "./../main/mlgm_bytes.c"
 #include "./../main/mlgm_format.c"
-#include "./../main/mlgm_errors.c" 
+#include "./../main/mlgm_errors.c"
+#include "./../main/mlgm_strings.c"
+#include "./../main/mlgm_defer.c"
 
 #include "./../main/crypto/sum_fn.c"
 

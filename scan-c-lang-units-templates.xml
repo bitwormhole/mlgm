@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <template name="begin">
+
+        #ifndef xxx
+        #define xxx
+
+
+    </template>
+
+    <template name="item">
+
+        aaaaaaaa("{{abc.xyz}}",{{abc.xyz}});
+
+    </template>
+
+    <template name="end">
+
+        #endif // xxx
+
+    </template>
+
+</templates>

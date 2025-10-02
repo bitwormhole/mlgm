@@ -14,7 +14,7 @@ mlgm_error run_case_sha1_sum_from_hex_string(mlgm_unit *unit)
 
     mlgm_sha1_sum sum = mlgm_sha1_sum_from_hex_string(str1);
 
-    mlgm_byte *ss = sum.sum;
+    mlgm_byte *ss = sum.body;
     char str_buf[99];
 
     mlgm_string str2 = mlgm_sha1_sum_to_hex_string(&sum, str_buf, sizeof(str_buf));

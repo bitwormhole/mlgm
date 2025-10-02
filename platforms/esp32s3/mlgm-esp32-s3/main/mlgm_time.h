@@ -14,7 +14,15 @@ typedef mlgm_int64 mlgm_time_stamp;
 // in ms
 typedef mlgm_int64 mlgm_time_span;
 
+////////////////////////////////////////////////////////////////////////////////
+
+// 让当前线程休眠 一段时间，单位： ms
 void mlgm_time_sleep(mlgm_time_span ms);
+
+// 运行一个无限循环， 并反复打印几个 tag
 void mlgm_time_sleep_infinity(mlgm_string tag);
+
+// 取系统的当前时间
+mlgm_time_stamp mlgm_time_now();
 
 #endif // __mlgm_time_h__

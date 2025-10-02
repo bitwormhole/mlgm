@@ -2,6 +2,8 @@
 
 #include "mlgm_logger.h"
 
+#include <memory.h>
+
 ////////////////////////////////////////////////////////////////////////////////
 
 mlgm_error udp_debug_module_on_create(mlgm_module *m);
@@ -23,22 +25,27 @@ mlgm_error udp_debug_module_on_create(mlgm_module *m)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-mlgm_module *udp_debug_init(udp_debug_module *m1)
+mlgm_module *udp_debug_init(udp_debug_module *m2, mlgm_app_context *ac)
 {
-    mlgm_module *m2 = &m1->module;
+    if (m2)
+    {
+        memset(m2, 0, sizeof(m2[0]));
+    }
+    else
+    {
+        return NIL;
+    }
 
-    m2->name = "udp_debug_module";
-    m2->enabled = YES;
-    m2->instance = m1;
+    mlgm_module_class clazz = MLGM_MODULE_CLASS_UDP_DEBUG;
+    mlgm_string name = "udp_debug_module";
 
-    m2->on_create = udp_debug_module_on_create;
+    mlgm_module *m1 = &m2->head;
+    m1 = mlgm_module_init(m1, ac, clazz, name, m2);
+    if (m1)
+    {
+        m1->on_create = udp_debug_module_on_create;
+    }
 
-    // m2->on_start = udp_debug_module_on_start;
-    // m2->on_resume = udp_debug_module_on_resume;
-    // m2->on_run = udp_debug_module_on_run;
-    // m2->on_pause = udp_debug_module_on_pause;
-    // m2->on_stop = udp_debug_module_on_stop;
-    // m2->on_destroy = udp_debug_module_on_destroy;
-
-    return m2;
+    m2->self = m2;
+    return m1;
 }

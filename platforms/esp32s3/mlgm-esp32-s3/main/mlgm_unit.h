@@ -7,10 +7,9 @@
 
 #include "mlgm_types.h"
 #include "mlgm_errors.h"
+#include "mlgm_structures.h"
 
-struct t_mlgm_unit;
-
-typedef mlgm_error (*mlgm_unit_func)(struct t_mlgm_unit *unit);
+typedef mlgm_error (*mlgm_unit_func)(mlgm_unit *unit);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -21,6 +20,8 @@ typedef struct t_mlgm_unit
     mlgm_bool enabled;
     mlgm_int order;
     mlgm_unit_func fn;
+
+    mlgm_app_context *context; // the mlgm_app*
 
 } mlgm_unit;
 
@@ -54,7 +55,7 @@ typedef struct t_mlgm_unit_list
 } mlgm_unit_list;
 
 void mlgm_unit_list_init(mlgm_unit_list *self);
-mlgm_error mlgm_unit_list_run_all(mlgm_unit_list *self);
+mlgm_error mlgm_unit_list_run_all(mlgm_unit_list *self, struct t_mlgm_app_context *ac);
 
 void mlgm_unit_list_add(mlgm_unit_list *self, mlgm_unit *unit);
 void mlgm_unit_list_add_fn(mlgm_unit_list *self, mlgm_string name, mlgm_unit_func fn);

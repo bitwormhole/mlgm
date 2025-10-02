@@ -1,6 +1,7 @@
 #include "mlgm_hex.h"
 
 #include "mlgm_bytes.h"
+#include "mlgm_strings.h"
 
 #include <memory.h>
 

@@ -1,0 +1,33 @@
+{
+    "configen": {
+        "version": "4",
+        "sources": [
+            {
+                "id": "main",
+                "path": "app",
+                "r": true
+            },
+            {
+                "id": "test",
+                "path": "src/test/golang/units",
+                "r": true
+            }
+        ],
+        "destinations": [
+            {
+                "id": "main",
+                "path": "gen/main4sclu",
+                "sources": [
+                    "main"
+                ]
+            },
+            {
+                "id": "test",
+                "path": "gen/test4sclu",
+                "sources": [
+                    "test"
+                ]
+            }
+        ]
+    }
+}

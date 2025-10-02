@@ -6,5 +6,6 @@
 
 mlgm_error rt_unit_example1(mlgm_unit *unit);
 mlgm_error rt_unit_test_hash_algorithms(mlgm_unit *unit);
+mlgm_error rt_unit_test_sd_card_rw(mlgm_unit *unit);
 
 #endif //  __units_units_h__

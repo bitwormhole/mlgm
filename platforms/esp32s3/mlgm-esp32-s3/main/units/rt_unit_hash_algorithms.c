@@ -66,6 +66,7 @@ mlgm_error rt_unit_test_hash_algorithms(mlgm_unit *u)
     return NIL;
 }
 
+// c:test-not
 // 测试各个 sum 结构中， head & body 是否对齐
 mlgm_error rt_unit_test_sum_struct_bytes_align(mlgm_unit *u)
 {

@@ -109,8 +109,12 @@ mlgm_bool mlgm_bytes_buffer_has_space(mlgm_bytes_buffer *self, mlgm_size want_si
     return NO;
 }
 
-mlgm_bytes_buffer *mlgm_bytes_buffer_write(mlgm_bytes_buffer *self, mlgm_byte *src, mlgm_size src_len)
+mlgm_bytes_buffer *mlgm_bytes_buffer_write(mlgm_bytes_buffer *self, const mlgm_byte *src, mlgm_size src_len)
 {
+    if (self == NIL || src == NIL)
+    {
+        return self;
+    }
     if (mlgm_bytes_buffer_has_space(self, src_len))
     {
         mlgm_byte *dst = self->data + self->length;
@@ -122,7 +126,7 @@ mlgm_bytes_buffer *mlgm_bytes_buffer_write(mlgm_bytes_buffer *self, mlgm_byte *s
     {
         self->overflow = YES;
     }
-    return NIL;
+    return self;
 }
 
 mlgm_bytes_buffer *mlgm_bytes_buffer_write_byte(mlgm_bytes_buffer *self, mlgm_byte b)
@@ -186,132 +190,6 @@ mlgm_error mlgm_bytes_buffer_error(mlgm_bytes_buffer *self)
         }
     }
     return NIL;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// struct:mlgm_string_builder
-
-mlgm_string_builder *mlgm_string_builder_init(mlgm_string_builder *self)
-{
-    if (self)
-    {
-        mlgm_bytes_buffer *bb = &self->buffer;
-        mlgm_bytes_buffer_init(bb);
-    }
-    return self;
-}
-
-mlgm_string_builder *mlgm_string_builder_init_with_size(mlgm_string_builder *self, mlgm_size size)
-{
-    if (self)
-    {
-        mlgm_bytes_buffer *bb = &self->buffer;
-        mlgm_bytes_buffer_init_with_size(bb, size);
-    }
-    return self;
-}
-
-mlgm_string_builder *mlgm_string_builder_init_with_buffer(mlgm_string_builder *self, void *buf, mlgm_size buf_cap)
-{
-    if (self)
-    {
-        mlgm_bytes_buffer *bb = &self->buffer;
-        mlgm_bytes_buffer_init_with_buffer(bb, buf, buf_cap);
-    }
-    return self;
-}
-
-mlgm_string_builder *mlgm_string_builder_reset(mlgm_string_builder *self)
-{
-    if (self)
-    {
-        mlgm_bytes_buffer *buffer = &self->buffer;
-        mlgm_bytes_buffer_reset(buffer);
-    }
-    return self;
-}
-
-mlgm_string_builder *mlgm_string_builder_append_string(mlgm_string_builder *self, mlgm_string str)
-{
-
-    // todo ... append ...
-    return self;
-}
-
-mlgm_string_builder *mlgm_string_builder_append_uint(mlgm_string_builder *self, mlgm_uint n)
-{ // todo ... append ...
-    return self;
-}
-
-mlgm_string_builder *mlgm_string_builder_append_int(mlgm_string_builder *self, mlgm_int n)
-{ // todo ... append ...
-    return self;
-}
-
-mlgm_string_builder *mlgm_string_builder_append_bool(mlgm_string_builder *self, mlgm_bool b)
-{ // todo ... append ...
-    return self;
-}
-
-mlgm_string_builder *mlgm_string_builder_append_char(mlgm_string_builder *self, mlgm_char n)
-{
-    if (self)
-    {
-        mlgm_bytes_buffer *pbuf = &self->buffer;
-        mlgm_bytes_buffer_write_byte(pbuf, n);
-    }
-    return self;
-}
-
-mlgm_string_builder *mlgm_string_builder_append_byte(mlgm_string_builder *self, mlgm_byte n)
-{ // todo ... append ...
-    return self;
-}
-
-mlgm_string mlgm_string_builder_string(mlgm_string_builder *self)
-{
-    if (self)
-    {
-        mlgm_bytes_buffer *buf = &self->buffer;
-        mlgm_byte *data = buf->data;
-        mlgm_size len = buf->length;
-        mlgm_size cap = buf->capacity;
-        if ((data) && (0 <= len) && (len < cap))
-        {
-            data[len] = 0;
-        }
-        return (mlgm_string)data;
-    }
-    return NIL;
-}
-
-mlgm_size mlgm_string_builder_length(mlgm_string_builder *self)
-{
-    if (self)
-    {
-        mlgm_bytes_buffer *buffer = &self->buffer;
-        return buffer->length;
-    }
-    return 0;
-}
-
-mlgm_error mlgm_string_builder_error(mlgm_string_builder *self)
-{
-    if (self)
-    {
-        mlgm_bytes_buffer *buffer = &self->buffer;
-        return mlgm_bytes_buffer_error(buffer);
-    }
-    return NIL;
-}
-
-void mlgm_string_builder_release(mlgm_string_builder *self)
-{
-    if (self)
-    {
-        mlgm_bytes_buffer *buffer = &self->buffer;
-        mlgm_bytes_buffer_release(buffer);
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
