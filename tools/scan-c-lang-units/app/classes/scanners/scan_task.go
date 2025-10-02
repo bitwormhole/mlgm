@@ -74,10 +74,12 @@ func (inst *innerScanTaskRunner) run() error {
 	steps = append(steps, inst.doStepScanSourceDir)
 	steps = append(steps, inst.doStepPrintTestFunctionNameList)
 	steps = append(steps, inst.doStepLoadCodeGenTemplates)
-	steps = append(steps, inst.doStepGenerateCode)
-	steps = append(steps, inst.doStepPrintGeneratedCode)
 	steps = append(steps, inst.doStepLoadTargetHeaderFileFingerprint)
 	steps = append(steps, inst.doStepCheckTargetHeaderFileFingerprint)
+
+	steps = append(steps, inst.doStepGenerateCode)
+
+	steps = append(steps, inst.doStepPrintGeneratedCode)
 	steps = append(steps, inst.doStepWriteToHeaderFile)
 
 	for _, fn := range steps {
@@ -237,6 +239,7 @@ func (inst *innerScanTaskRunner) doStepGenerateCode(task *ScanTask) error {
 
 	cg := new(innerCHeaderFileCodeGenerator)
 	cg.task = task
+
 	code, err := cg.generate()
 	if err != nil {
 		return err
@@ -270,6 +273,19 @@ func (inst *innerScanTaskRunner) doStepPrintGeneratedCode(task *ScanTask) error 
 }
 
 func (inst *innerScanTaskRunner) doStepWriteToHeaderFile(task *ScanTask) error {
+
+	file := task.headerFile
+	code := task.code
+	data := []byte(code)
+
+	err := file.GetIO().WriteBinary(data, nil)
+	if err != nil {
+		return err
+	}
+
+	path := file.GetPath()
+	size := len(data)
+	vlog.Info("wrote %d bytes to file [%s]", size, path)
 
 	return nil
 }

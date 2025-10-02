@@ -1,12 +1,10 @@
 package scanners
 
 import (
-	"fmt"
 	"strings"
-)
+	"text/template"
 
-const (
-	nl = "\n"
+	"github.com/starter-go/base/lang"
 )
 
 type innerCHeaderFileCodeGenerator struct {
@@ -15,10 +13,13 @@ type innerCHeaderFileCodeGenerator struct {
 
 	tagIfndef      string
 	headerFileName string // the simple name of xxx.h
+	fingerprint    lang.Hex
 
-	templateListBegin string
-	templateListItem  string
-	templateListEnd   string
+	params *CHeaderFileCodeGenParams
+
+	templateFileHeader *template.Template
+	templateFileItem   *template.Template
+	templateFileFooter *template.Template
 }
 
 func (inst *innerCHeaderFileCodeGenerator) generate() (string, error) {
@@ -30,13 +31,12 @@ func (inst *innerCHeaderFileCodeGenerator) generate() (string, error) {
 	inst.builder = builder
 
 	steps = append(steps, inst.doStepInit)
-	steps = append(steps, inst.doStep1FileBegin)
-	steps = append(steps, inst.doStepAddFingerprint)
+	steps = append(steps, inst.doStepPrepareParams)
+	steps = append(steps, inst.doStepPrepareTemplates)
 
-	steps = append(steps, inst.doStep2ListBegin)
-	steps = append(steps, inst.doStep3ListItems)
-	steps = append(steps, inst.doStep4ListEnd)
-	steps = append(steps, inst.doStep5FileEnd)
+	steps = append(steps, inst.doStepFileHeader)
+	steps = append(steps, inst.doStepFileItems)
+	steps = append(steps, inst.doStepFileFooter)
 
 	for _, fn := range steps {
 		err := fn(task)
@@ -55,10 +55,7 @@ func (inst *innerCHeaderFileCodeGenerator) doStepInit(task *ScanTask) error {
 
 	inst.headerFileName = name
 	inst.tagIfndef = inst.makeTagIfndef(name)
-
-	inst.templateListBegin = "void unit_test_case_list ()  {\n"
-	inst.templateListItem = "  unit_test_case_list_item( \"%s\", %s);\n"
-	inst.templateListEnd = "}\n"
+	inst.fingerprint = task.headerFileFingerprint
 
 	return nil
 }
@@ -73,81 +70,102 @@ func (inst *innerCHeaderFileCodeGenerator) makeTagIfndef(fileName string) string
 	return str
 }
 
-func (inst *innerCHeaderFileCodeGenerator) doStep1FileBegin(task *ScanTask) error {
-	builder := inst.builder
+func (inst *innerCHeaderFileCodeGenerator) doStepPrepareParams(task *ScanTask) error {
+	p := new(CHeaderFileCodeGenParams)
 
-	builder.WriteString("// ")
-	builder.WriteString(inst.headerFileName)
-	builder.WriteString(nl)
+	p.FileName = inst.headerFileName
+	p.Fingerprint = inst.fingerprint.String()
+	p.TagIfndef = inst.tagIfndef
 
-	builder.WriteString("#ifndef ")
-	builder.WriteString(inst.tagIfndef)
-	builder.WriteString(nl)
+	p.TestFunctionName = "todo..."
 
-	builder.WriteString("#define ")
-	builder.WriteString(inst.tagIfndef)
-	builder.WriteString(nl)
-
+	inst.params = p
 	return nil
 }
 
-func (inst *innerCHeaderFileCodeGenerator) doStepAddFingerprint(task *ScanTask) error {
-	builder := inst.builder
+func (inst *innerCHeaderFileCodeGenerator) doStepPrepareTemplates(task *ScanTask) error {
 
-	builder.WriteString("// fingerprint: ffffffffffffff")
-	builder.WriteString(nl)
+	tempSet := task.templates
 
+	t1, err := tempSet.findTemplate("header")
+	if err != nil {
+		return err
+	}
+
+	t2, err := tempSet.findTemplate("item")
+	if err != nil {
+		return err
+	}
+
+	t3, err := tempSet.findTemplate("footer")
+	if err != nil {
+		return err
+	}
+
+	inst.templateFileHeader = t1
+	inst.templateFileItem = t2
+	inst.templateFileFooter = t3
 	return nil
 }
 
-func (inst *innerCHeaderFileCodeGenerator) doStep2ListBegin(task *ScanTask) error {
+func (inst *innerCHeaderFileCodeGenerator) doStepFileHeader(task *ScanTask) error {
+
 	builder := inst.builder
+	params := inst.params
+	templ := inst.templateFileHeader
 
-	builder.WriteString("// list begin")
-	builder.WriteString(nl)
-
-	return nil
+	return templ.Execute(builder, params)
 }
 
-func (inst *innerCHeaderFileCodeGenerator) doStep3ListItems(task *ScanTask) error {
+func (inst *innerCHeaderFileCodeGenerator) doStepFileItems(task *ScanTask) error {
 
 	builder := inst.builder
+	params := inst.params
+	templ := inst.templateFileItem
 	list := task.unitTestFuncNameList
-	templ := inst.templateListItem
-	line := ""
 
 	for _, name := range list {
-
-		// line := fmt.Sprintf("// test_func[%d] : %s", i, name)
-
-		line = fmt.Sprintf(templ, name, name)
-
-		builder.WriteString(line)
-		builder.WriteString(nl)
+		p2 := params.Clone()
+		p2.TestFunctionName = name
+		err := templ.Execute(builder, p2)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
-func (inst *innerCHeaderFileCodeGenerator) doStep4ListEnd(task *ScanTask) error {
+func (inst *innerCHeaderFileCodeGenerator) doStepFileFooter(task *ScanTask) error {
 
 	builder := inst.builder
+	params := inst.params
+	templ := inst.templateFileFooter
 
-	builder.WriteString("// list end")
-	builder.WriteString(nl)
-
-	return nil
+	return templ.Execute(builder, params)
 }
 
-func (inst *innerCHeaderFileCodeGenerator) doStep5FileEnd(task *ScanTask) error {
-	builder := inst.builder
+////////////////////////////////////////////////////////////////////////////////
+// Params
 
-	builder.WriteString("// file end")
-	builder.WriteString(nl)
+type CHeaderFileCodeGenParams struct {
 
-	builder.WriteString("#endif // ")
-	builder.WriteString(inst.tagIfndef)
-	builder.WriteString(nl)
+	// for global
 
-	return nil
+	FileName    string
+	TagIfndef   string
+	Fingerprint string
+
+	// for item
+	TestFunctionName string
 }
+
+func (inst *CHeaderFileCodeGenParams) Clone() *CHeaderFileCodeGenParams {
+	p1 := inst
+	p2 := new(CHeaderFileCodeGenParams)
+	*p2 = *p1
+	return p2
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// EOF

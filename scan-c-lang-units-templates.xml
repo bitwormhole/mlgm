@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
 
-    <template name="begin">
+    <template name="header">
 
-        #ifndef xxx
-        #define xxx
+// {{.FileName}}
+//
+// fingerprint: {{.Fingerprint}}
+//
+// 注意: 这个文件由以下工具自动生成，切勿手工修改！
+//  scan-c-lang-units (URL=https://github.com/bitwormhole/mlgm/tree/main/tools/scan-c-lang-units)
+
+#ifndef {{.TagIfndef}}
+#define {{.TagIfndef}}
 
 
     </template>
 
     <template name="item">
 
-        aaaaaaaa("{{abc.xyz}}",{{abc.xyz}});
+        aaaaaaaa("{{.TestFunctionName}}",{{.TestFunctionName}});
 
     </template>
 
-    <template name="end">
+    <template name="footer">
 
-        #endif // xxx
+#endif // {{.TagIfndef}}
 
     </template>
 
